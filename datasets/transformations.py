@@ -250,8 +250,8 @@ class Flip:
         return sample
 
     def _swap_left_right(self, keypoints):
-        right = [2, 3, 4, 8, 9, 10, 14, 16]
-        left = [5, 6, 7, 11, 12, 13, 15, 17]
+        right = [3,2]
+        left = [0,1]
         for r, l in zip(right, left):
             keypoints[r], keypoints[l] = keypoints[l], keypoints[r]
         return keypoints

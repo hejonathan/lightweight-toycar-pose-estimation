@@ -16,9 +16,9 @@ def prepare_annotations(annotations_per_image, images_info, net_input_size):
     for _, annotations in annotations_per_image.items():
         previous_centers = []
         for annotation in annotations[0]:
-            if (annotation['num_keypoints'] < 5
-                    or annotation['area'] < 32 * 32):
-                continue
+#            if (annotation['num_keypoints'] < 5
+#                    or annotation['area'] < 32 * 32):
+#                continue
             person_center = [annotation['bbox'][0] + annotation['bbox'][2] / 2,
                              annotation['bbox'][1] + annotation['bbox'][3] / 2]
             is_close = False
@@ -98,6 +98,7 @@ if __name__ == '__main__':
 
     annotations_per_image_mapping = {}
     for annotation in data['annotations']:
+        annotation['num_keypoints'] = 4
         if annotation['num_keypoints'] != 0 and not annotation['iscrowd']:
             if annotation['image_id'] not in annotations_per_image_mapping:
                 annotations_per_image_mapping[annotation['image_id']] = [[], []]

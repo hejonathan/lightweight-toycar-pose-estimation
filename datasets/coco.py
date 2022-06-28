@@ -10,8 +10,7 @@ import pycocotools
 
 from torch.utils.data.dataset import Dataset
 
-BODY_PARTS_KPT_IDS = [[1, 8], [8, 9], [9, 10], [1, 11], [11, 12], [12, 13], [1, 2], [2, 3], [3, 4], [2, 16],
-                      [1, 5], [5, 6], [6, 7], [5, 17], [1, 0], [0, 14], [0, 15], [14, 16], [15, 17]]
+BODY_PARTS_KPT_IDS = [[0,1],[3,2]]
 
 
 def get_mask(segmentations, mask):
