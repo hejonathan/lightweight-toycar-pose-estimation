@@ -49,20 +49,45 @@ def pad_width(img, stride, pad_value, min_dims):
     return padded_img, pad
 
 
+#def convert_to_coco_format(pose_entries, all_keypoints):
+#    coco_keypoints = []
+#    scores = []
+#    for n in range(len(pose_entries)):
+#        if len(pose_entries[n]) == 0:
+#            continue
+#        keypoints = [0] * 17 * 3
+#        to_coco_map = [0, -1, 6, 8, 10, 5, 7, 9, 12, 14, 16, 11, 13, 15, 2, 1, 4, 3]
+#        person_score = pose_entries[n][-2]
+#        position_id = -1
+#        for keypoint_id in pose_entries[n][:-2]:
+#            position_id += 1
+#            if position_id == 1:  # no 'neck' in COCO
+#                continue
+#
+#            cx, cy, score, visibility = 0, 0, 0, 0  # keypoint not found
+#            if keypoint_id != -1:
+#                cx, cy, score = all_keypoints[int(keypoint_id), 0:3]
+#                cx = cx + 0.5
+#                cy = cy + 0.5
+#                visibility = 1
+#            keypoints[to_coco_map[position_id] * 3 + 0] = cx
+#            keypoints[to_coco_map[position_id] * 3 + 1] = cy
+#            keypoints[to_coco_map[position_id] * 3 + 2] = visibility
+#        coco_keypoints.append(keypoints)
+#        scores.append(person_score * max(0, (pose_entries[n][-1] - 1)))  # -1 for 'neck'
+#    return coco_keypoints, scores
 def convert_to_coco_format(pose_entries, all_keypoints):
     coco_keypoints = []
     scores = []
     for n in range(len(pose_entries)):
         if len(pose_entries[n]) == 0:
             continue
-        keypoints = [0] * 17 * 3
-        to_coco_map = [0, -1, 6, 8, 10, 5, 7, 9, 12, 14, 16, 11, 13, 15, 2, 1, 4, 3]
+        keypoints = [0] * 4 * 3
+        to_coco_map = [0, 1, 2, 3]
         person_score = pose_entries[n][-2]
         position_id = -1
         for keypoint_id in pose_entries[n][:-2]:
             position_id += 1
-            if position_id == 1:  # no 'neck' in COCO
-                continue
 
             cx, cy, score, visibility = 0, 0, 0, 0  # keypoint not found
             if keypoint_id != -1:
@@ -82,8 +107,8 @@ def infer(net, img, scales, base_height, stride, pad_value=(0, 0, 0), img_mean=(
     normed_img = normalize(img, img_mean, img_scale)
     height, width, _ = normed_img.shape
     scales_ratios = [scale * base_height / float(height) for scale in scales]
-    avg_heatmaps = np.zeros((height, width, 19), dtype=np.float32)
-    avg_pafs = np.zeros((height, width, 38), dtype=np.float32)
+    avg_heatmaps = np.zeros((height, width, 5), dtype=np.float32)
+    avg_pafs = np.zeros((height, width, 4), dtype=np.float32)
 
     for ratio in scales_ratios:
         scaled_img = cv2.resize(normed_img, (0, 0), fx=ratio, fy=ratio, interpolation=cv2.INTER_CUBIC)
