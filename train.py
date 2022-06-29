@@ -23,7 +23,7 @@ cv2.ocl.setUseOpenCL(False)  # To prevent freeze of DataLoader
 def train(prepared_train_labels, train_images_folder, num_refinement_stages, base_lr, batch_size, batches_per_iter,
           num_workers, checkpoint_path, weights_only, from_mobilenet, checkpoints_folder, log_after,
           val_labels, val_images_folder, val_output_name, checkpoint_after, val_after):
-    net = PoseEstimationWithMobileNet(num_refinement_stages, num_heatmaps=5, num_pafs=4)
+    net = PoseEstimationWithMobileNet(num_refinement_stages=num_refinement_stages, num_heatmaps=5, num_pafs=4)
 
     stride = 8
     sigma = 7

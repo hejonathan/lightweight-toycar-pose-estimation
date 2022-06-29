@@ -171,7 +171,7 @@ if __name__ == '__main__':
     parser.add_argument('--visualize', action='store_true', help='show keypoints')
     args = parser.parse_args()
 
-    net = PoseEstimationWithMobileNet()
+    net = PoseEstimationWithMobileNet(num_heatmaps=5, num_pafs=4)
     checkpoint = torch.load(args.checkpoint_path)
     load_state(net, checkpoint)
 
