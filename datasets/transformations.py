@@ -27,7 +27,7 @@ class ConvertKeypoints:
                         or keypoint[1] < 0
                         or keypoint[1] >= h):
                     keypoint[2] = 2
-        label['keypoints'] = self._convert(label['keypoints'], w, h)
+#        label['keypoints'] = self._convert(label['keypoints'], w, h)
 
         for other_label in label['processed_other_annotations']:
             other_label['keypoints'] = self._convert(other_label['keypoints'], w, h)
