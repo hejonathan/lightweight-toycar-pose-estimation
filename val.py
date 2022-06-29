@@ -17,6 +17,11 @@ from modules.load_state import load_state
 def run_coco_eval(gt_file_path, dt_file_path):
     annotation_type = 'keypoints'
     print('Running test for {} results.'.format(annotation_type))
+    print(gt_file_path, dt_file_path)
+
+    if(len(open(dt_file_path, 'r').readlines())<=1):
+      print('file too short, aborting validation')
+      return
 
     coco_gt = COCO(gt_file_path)
     coco_dt = coco_gt.loadRes(dt_file_path)
@@ -153,13 +158,13 @@ def evaluate(labels, output_name, images_folder, net, multiscale=False, visualiz
 
         total_keypoints_num = 0
         all_keypoints_by_type = []
-        for kpt_idx in range(18):  # 19th for bg
+        for kpt_idx in range(4):  # 19th for bg
             total_keypoints_num += extract_keypoints(avg_heatmaps[:, :, kpt_idx], all_keypoints_by_type, total_keypoints_num)
 
         pose_entries, all_keypoints = group_keypoints(all_keypoints_by_type, avg_pafs)
-
+        print('all_keypoints', all_keypoints)
         coco_keypoints, scores = convert_to_coco_format(pose_entries, all_keypoints)
-
+        print('coco_keypoints', coco_keypoints, scores)
         image_id = int(file_name[0:file_name.rfind('.')])
         for idx in range(len(coco_keypoints)):
             coco_result.append({

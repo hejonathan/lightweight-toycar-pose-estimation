@@ -96,8 +96,14 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
         all_keypoints_by_type = []
         for kpt_idx in range(num_keypoints):  # 19th for bg
             total_keypoints_num += extract_keypoints(heatmaps[:, :, kpt_idx], all_keypoints_by_type, total_keypoints_num)
+        print(total_keypoints_num)
 
         pose_entries, all_keypoints = group_keypoints(all_keypoints_by_type, pafs)
+        print('all_keypoints', all_keypoints_by_type)
+        print('pose entries', pose_entries)
+        for tp in all_keypoints_by_type:
+            for kp in tp:
+                img = cv2.circle(img, (int(kp[0]),int(kp[1])), 4, (0,0,255), -1)
         for kpt_id in range(all_keypoints.shape[0]):
             all_keypoints[kpt_id, 0] = (all_keypoints[kpt_id, 0] * stride / upsample_ratio - pad[1]) / scale
             all_keypoints[kpt_id, 1] = (all_keypoints[kpt_id, 1] * stride / upsample_ratio - pad[0]) / scale

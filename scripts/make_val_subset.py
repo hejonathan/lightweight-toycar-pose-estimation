@@ -15,7 +15,7 @@ if __name__ == '__main__':
         data = json.load(f)
 
     random.seed(0)
-    total_val_images = 5000
+    total_val_images = 94
     idxs = list(range(total_val_images))
     random.shuffle(idxs)
 
@@ -32,7 +32,6 @@ if __name__ == '__main__':
 
     subset = {
         'info': data['info'],
-        'licenses': data['licenses'],
         'images': [],
         'annotations': [],
         'categories': data['categories']
