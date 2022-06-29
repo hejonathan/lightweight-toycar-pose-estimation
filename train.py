@@ -154,9 +154,9 @@ if __name__ == '__main__':
     parser.add_argument('--val-images-folder', type=str, required=True, help='path to COCO val images folder')
     parser.add_argument('--val-output-name', type=str, default='detections.json',
                         help='name of output json file with detected keypoints')
-    parser.add_argument('--checkpoint-after', type=int, default=5000,
+    parser.add_argument('--checkpoint-after', type=int, default=400,
                         help='number of iterations to save checkpoint')
-    parser.add_argument('--val-after', type=int, default=5000,
+    parser.add_argument('--val-after', type=int, default=200,
                         help='number of iterations to run validation')
     args = parser.parse_args()
 
