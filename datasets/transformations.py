@@ -33,23 +33,6 @@ class ConvertKeypoints:
             other_label['keypoints'] = self._convert(other_label['keypoints'], w, h)
         return sample
 
-    def _convert(self, keypoints, w, h):
-        # Nose, Neck, R hand, L hand, R leg, L leg, Eyes, Ears
-        reorder_map = [1, 7, 9, 11, 6, 8, 10, 13, 15, 17, 12, 14, 16, 3, 2, 5, 4]
-        converted_keypoints = list(keypoints[i - 1] for i in reorder_map)
-        converted_keypoints.insert(1, [(keypoints[5][0] + keypoints[6][0]) / 2,
-                                       (keypoints[5][1] + keypoints[6][1]) / 2, 0])  # Add neck as a mean of shoulders
-        if keypoints[5][2] == 2 or keypoints[6][2] == 2:
-            converted_keypoints[1][2] = 2
-        elif keypoints[5][2] == 1 and keypoints[6][2] == 1:
-            converted_keypoints[1][2] = 1
-        if (converted_keypoints[1][0] < 0
-                or converted_keypoints[1][0] >= w
-                or converted_keypoints[1][1] < 0
-                or converted_keypoints[1][1] >= h):
-            converted_keypoints[1][2] = 2
-        return converted_keypoints
-
 
 class Scale:
     def __init__(self, prob=1, min_scale=0.5, max_scale=1.1, target_dist=0.6):
@@ -250,8 +233,8 @@ class Flip:
         return sample
 
     def _swap_left_right(self, keypoints):
-        right = [3,2]
         left = [0,1]
+        right = [3,4]
         for r, l in zip(right, left):
             keypoints[r], keypoints[l] = keypoints[l], keypoints[r]
         return keypoints

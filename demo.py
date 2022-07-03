@@ -91,7 +91,13 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
     for img in image_provider:
         orig_img = img.copy()
         heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu)
-
+        print(pafs.shape)
+        cv2.imshow('0',heatmaps[:,:,0])
+        cv2.imshow('1',heatmaps[:,:,1])
+        cv2.imshow('2',heatmaps[:,:,2])
+        cv2.imshow('3',heatmaps[:,:,3])
+        cv2.imshow('4',heatmaps[:,:,4])
+        cv2.waitKey(1)
         total_keypoints_num = 0
         all_keypoints_by_type = []
         for kpt_idx in range(num_keypoints):  # 19th for bg
@@ -101,12 +107,12 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
         pose_entries, all_keypoints = group_keypoints(all_keypoints_by_type, pafs)
         print('all_keypoints', all_keypoints_by_type)
         print('pose entries', pose_entries)
-        for tp in all_keypoints_by_type:
-            for kp in tp:
-                img = cv2.circle(img, (int(kp[0]),int(kp[1])), 4, (0,0,255), -1)
+        
         for kpt_id in range(all_keypoints.shape[0]):
             all_keypoints[kpt_id, 0] = (all_keypoints[kpt_id, 0] * stride / upsample_ratio - pad[1]) / scale
             all_keypoints[kpt_id, 1] = (all_keypoints[kpt_id, 1] * stride / upsample_ratio - pad[0]) / scale
+        for kp in all_keypoints:
+            img = cv2.circle(img, (int(kp[0]), int(kp[1])), 6, (0,0,255), -1)
         current_poses = []
         for n in range(len(pose_entries)):
             if len(pose_entries[n]) == 0:
@@ -159,7 +165,7 @@ if __name__ == '__main__':
     if args.video == '' and args.images == '':
         raise ValueError('Either --video or --image has to be provided')
 
-    net = PoseEstimationWithMobileNet(num_heatmaps=5, num_pafs=4)
+    net = PoseEstimationWithMobileNet(num_heatmaps=6, num_pafs=16)
     checkpoint = torch.load(args.checkpoint_path, map_location='cpu')
     load_state(net, checkpoint)
 

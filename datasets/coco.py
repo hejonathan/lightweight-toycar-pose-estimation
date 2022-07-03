@@ -10,7 +10,7 @@ import pycocotools
 
 from torch.utils.data.dataset import Dataset
 
-BODY_PARTS_KPT_IDS = [[0,1],[3,2]]
+BODY_PARTS_KPT_IDS = [[2, 0], [2, 1], [2, 4], [2, 3], [0, 1], [3, 4], [0, 3], [1, 4]]
 
 
 def get_mask(segmentations, mask):
@@ -69,7 +69,7 @@ class CocoTrainDataset(Dataset):
         return len(self._labels)
 
     def _generate_keypoint_maps(self, sample):
-        n_keypoints = 4
+        n_keypoints = 5
         n_rows, n_cols, _ = sample['image'].shape
         keypoint_maps = np.zeros(shape=(n_keypoints + 1,
                                         n_rows // self._stride, n_cols // self._stride), dtype=np.float32)  # +1 for bg

@@ -2,12 +2,12 @@ import math
 import numpy as np
 from operator import itemgetter
 
-BODY_PARTS_KPT_IDS = [[0,1],[3,2]]
-BODY_PARTS_PAF_IDS = ([0,1],[2,3])
+BODY_PARTS_KPT_IDS = [[2, 0], [2, 1], [2, 4], [2, 3], [0, 1], [3, 4], [0, 3], [1, 4]]
+BODY_PARTS_PAF_IDS = ([0,1], [2,3], [4,5], [6,7], [8,9], [10,11],[12,13],[14,15])
 
 
 def extract_keypoints(heatmap, all_keypoints, total_keypoint_num):
-    heatmap[heatmap < 0.01] = 0
+    heatmap[heatmap < 0.1] = 0
     heatmap_with_borders = np.pad(heatmap, [(2, 2), (2, 2)], mode='constant')
     heatmap_center = heatmap_with_borders[1:heatmap_with_borders.shape[0]-1, 1:heatmap_with_borders.shape[1]-1]
     heatmap_left = heatmap_with_borders[1:heatmap_with_borders.shape[0]-1, 2:heatmap_with_borders.shape[1]]
@@ -59,7 +59,7 @@ def connections_nms(a_idx, b_idx, affinity_scores):
     return a_idx[idx], b_idx[idx], affinity_scores[idx]
 
 
-def group_keypoints(all_keypoints_by_type, pafs, pose_entry_size=20, min_paf_score=0.05):
+def group_keypoints(all_keypoints_by_type, pafs, pose_entry_size=7, min_paf_score=0.05):
     pose_entries = []
     all_keypoints = np.array([item for sublist in all_keypoints_by_type for item in sublist])
     points_per_limb = 10
@@ -119,7 +119,7 @@ def group_keypoints(all_keypoints_by_type, pafs, pose_entry_size=20, min_paf_sco
                 pose_entries[i][BODY_PARTS_KPT_IDS[0][1]] = connections[i][1]
                 pose_entries[i][-1] = 2
                 pose_entries[i][-2] = np.sum(all_keypoints[connections[i][0:2], 2]) + connections[i][2]
-        elif part_id == 17 or part_id == 18:
+        elif part_id == 6 or part_id == 7:
             kpt_a_id = BODY_PARTS_KPT_IDS[part_id][0]
             kpt_b_id = BODY_PARTS_KPT_IDS[part_id][1]
             for i in range(len(connections)):

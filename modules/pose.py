@@ -6,11 +6,11 @@ from modules.one_euro_filter import OneEuroFilter
 
 
 class Pose:
-    num_kpts = 4
-    kpt_names = ['top left', 'bottom left', 'top right', 'bottom right']
+    num_kpts = 5
+    kpt_names = ['top left', 'bottom left', 'center', 'top right', 'bottom right']
     kpt_names = ['']*num_kpts
 #    sigmas = np.array([.26, .79, .79, .72, .62, .79, .72, .62, 1.07, .87, .89, 1.07, .87, .89, .25, .25, .35, .35], dtype=np.float32) / 10.0
-    sigmas = np.array([0.25, 0.25, 0.25, 0.25], dtype=np.float32)
+    sigmas = np.array([0.25, 0.25, 0.25, 0.25, 0.25], dtype=np.float32)
     vars = (sigmas * 2) ** 2
     last_id = -1
     color = [0, 224, 255]

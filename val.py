@@ -87,8 +87,8 @@ def convert_to_coco_format(pose_entries, all_keypoints):
     for n in range(len(pose_entries)):
         if len(pose_entries[n]) == 0:
             continue
-        keypoints = [0] * 4 * 3
-        to_coco_map = [0, 1, 2, 3]
+        keypoints = [0] * 5 * 3
+        to_coco_map = [0, 1, 2, 3, 4]
         person_score = pose_entries[n][-2]
         position_id = -1
         for keypoint_id in pose_entries[n][:-2]:
@@ -112,8 +112,8 @@ def infer(net, img, scales, base_height, stride, pad_value=(0, 0, 0), img_mean=(
     normed_img = normalize(img, img_mean, img_scale)
     height, width, _ = normed_img.shape
     scales_ratios = [scale * base_height / float(height) for scale in scales]
-    avg_heatmaps = np.zeros((height, width, 5), dtype=np.float32)
-    avg_pafs = np.zeros((height, width, 4), dtype=np.float32)
+    avg_heatmaps = np.zeros((height, width, 6), dtype=np.float32)
+    avg_pafs = np.zeros((height, width, 16), dtype=np.float32)
 
     for ratio in scales_ratios:
         scaled_img = cv2.resize(normed_img, (0, 0), fx=ratio, fy=ratio, interpolation=cv2.INTER_CUBIC)
@@ -158,7 +158,7 @@ def evaluate(labels, output_name, images_folder, net, multiscale=False, visualiz
 
         total_keypoints_num = 0
         all_keypoints_by_type = []
-        for kpt_idx in range(4):  # 19th for bg
+        for kpt_idx in range(5):  # 19th for bg
             total_keypoints_num += extract_keypoints(avg_heatmaps[:, :, kpt_idx], all_keypoints_by_type, total_keypoints_num)
 
         pose_entries, all_keypoints = group_keypoints(all_keypoints_by_type, avg_pafs)
