@@ -24,6 +24,9 @@ def run_coco_eval(gt_file_path, dt_file_path):
       return
 
     coco_gt = COCO(gt_file_path)
+    print(gt_file_path, dt_file_path)
+    print(sorted([ann['image_id'] for ann in coco_gt.anns]))
+    print(sorted(coco_gt.getImgIds()))
     coco_dt = coco_gt.loadRes(dt_file_path)
 
     result = COCOeval(coco_gt, coco_dt, annotation_type)
@@ -165,11 +168,12 @@ def evaluate(labels, output_name, images_folder, net, multiscale=False, visualiz
         print('all_keypoints', all_keypoints)
         coco_keypoints, scores = convert_to_coco_format(pose_entries, all_keypoints)
         print('coco_keypoints', coco_keypoints, scores)
-        image_id = int(file_name[0:file_name.rfind('.')])
+        # image_id = int(file_name[0:file_name.rfind('.')])
+        image_id = sample['id']
         for idx in range(len(coco_keypoints)):
             coco_result.append({
                 'image_id': image_id,
-                'category_id': 1,  # person
+                'category_id': 6,  # posecard
                 'keypoints': coco_keypoints[idx],
                 'score': scores[idx]
             })

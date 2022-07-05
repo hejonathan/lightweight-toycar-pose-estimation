@@ -122,7 +122,7 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
                 if pose_entries[n][kpt_id] != -1.0:  # keypoint was found
                     pose_keypoints[kpt_id, 0] = int(all_keypoints[int(pose_entries[n][kpt_id]), 0])
                     pose_keypoints[kpt_id, 1] = int(all_keypoints[int(pose_entries[n][kpt_id]), 1])
-            pose = Pose(pose_keypoints, pose_entries[n][18])
+            pose = Pose(pose_keypoints, pose_entries[n][5])
             current_poses.append(pose)
 
         if track:

@@ -169,7 +169,9 @@ class CocoValDataset(Dataset):
     def __getitem__(self, idx):
         file_name = self._labels['images'][idx]['file_name']
         img = cv2.imread(os.path.join(self._images_folder, file_name), cv2.IMREAD_COLOR)
+        imgid = self._labels['images'][idx]['id']
         return {
+            'id': imgid,
             'img': img,
             'file_name': file_name
         }
