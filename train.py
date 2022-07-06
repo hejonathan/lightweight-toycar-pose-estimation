@@ -156,7 +156,7 @@ if __name__ == '__main__':
                         help='name of output json file with detected keypoints')
     parser.add_argument('--checkpoint-after', type=int, default=400,
                         help='number of iterations to save checkpoint')
-    parser.add_argument('--val-after', type=int, default=200,
+    parser.add_argument('--val-after', type=int, default=2000,
                         help='number of iterations to run validation')
     args = parser.parse_args()
 

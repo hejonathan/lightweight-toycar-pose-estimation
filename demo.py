@@ -9,6 +9,7 @@ from modules.keypoints import extract_keypoints, group_keypoints
 from modules.load_state import load_state
 from modules.pose import Pose, track_poses
 from val import normalize, pad_width
+import time
 
 
 class ImageReader(object):
@@ -89,9 +90,9 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
     previous_poses = []
     delay = 1
     for img in image_provider:
+        t1 = time.time()
         orig_img = img.copy()
         heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu)
-        print(pafs.shape)
         cv2.imshow('0',heatmaps[:,:,0])
         cv2.imshow('1',heatmaps[:,:,1])
         cv2.imshow('2',heatmaps[:,:,2])
@@ -102,11 +103,8 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
         all_keypoints_by_type = []
         for kpt_idx in range(num_keypoints):  # 19th for bg
             total_keypoints_num += extract_keypoints(heatmaps[:, :, kpt_idx], all_keypoints_by_type, total_keypoints_num)
-        print(total_keypoints_num)
 
         pose_entries, all_keypoints = group_keypoints(all_keypoints_by_type, pafs)
-        print('all_keypoints', all_keypoints_by_type)
-        print('pose entries', pose_entries)
         
         for kpt_id in range(all_keypoints.shape[0]):
             all_keypoints[kpt_id, 0] = (all_keypoints[kpt_id, 0] * stride / upsample_ratio - pad[1]) / scale
@@ -130,6 +128,7 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
             previous_poses = current_poses
         for pose in current_poses:
             pose.draw(img)
+            print(pose.bbox, pose.keypoints)
         img = cv2.addWeighted(orig_img, 0.6, img, 0.4, 0)
         for pose in current_poses:
             cv2.rectangle(img, (pose.bbox[0], pose.bbox[1]),
@@ -137,6 +136,8 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
             if track:
                 cv2.putText(img, 'id: {}'.format(pose.id), (pose.bbox[0], pose.bbox[1] - 16),
                             cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255))
+        t2 = time.time()
+        print(1/(t2-t1))
         cv2.imshow('Lightweight Human Pose Estimation Python Demo', img)
         key = cv2.waitKey(delay)
         if key == 27:  # esc
