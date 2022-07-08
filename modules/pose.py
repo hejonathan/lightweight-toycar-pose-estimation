@@ -12,7 +12,7 @@ class Pose:
     sigmas = np.array([0.25, 0.25, 0.25, 0.25, 0.25], dtype=np.float32)
     vars = (sigmas * 2) ** 2
     last_id = -1
-    color = [0, 224, 255]
+    color = [120, 0, 120]
 
     def __init__(self, keypoints, confidence):
         super().__init__()
@@ -55,7 +55,7 @@ class Pose:
                 x_b, y_b = self.keypoints[kpt_b_id]
                 cv2.circle(img, (int(x_b), int(y_b)), 3, Pose.color, -1)
             if global_kpt_a_id != -1 and global_kpt_b_id != -1:
-                cv2.line(img, (int(x_a), int(y_a)), (int(x_b), int(y_b)), Pose.color, 2)
+                cv2.line(img, (int(x_a), int(y_a)), (int(x_b), int(y_b)), Pose.color, 6)
 
 
 def get_similarity(a, b, threshold=0.5):
